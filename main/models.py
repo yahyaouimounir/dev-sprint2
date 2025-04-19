@@ -7,9 +7,7 @@ from django.contrib.auth.models import User
     
 class Member(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)  
-    phone = models.CharField(max_length=15, unique=True, null=True, blank=True)
     is_admin= models.BooleanField(default=False)
-    is_participant= models.BooleanField(default=False)
     def __str__(self):
         return self.user.username
 
@@ -31,20 +29,19 @@ class Event(models.Model):
     def __str__(self): 
         return self.title 
     
-
     
-class Request(models.Model):
+class requete(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True) 
-    participant = models.ForeignKey(Member, on_delete=models.CASCADE, null=True, blank=True, related_name='requests_made')
-    event = models.ForeignKey(Event, on_delete=models.CASCADE, null=True, blank=True, related_name='event_requests')
+    participant = models.ForeignKey(Member, on_delete=models.CASCADE, null=True, blank=True, related_name='requetes_made')
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, null=True, blank=True, related_name='event_requetes')
     status = models.BooleanField(default=False) 
-    notification = models.OneToOneField('Notification', on_delete=models.CASCADE, null=True, blank=True,related_name='request_notification')
+    notification = models.OneToOneField('Notification', on_delete=models.CASCADE, null=True, blank=True,related_name='requete_notification')
     def __str__(self):
-        return f"Request from {self.participant.username} for {self.event.title}"
+        return f"requete from {self.participant.username} for {self.event.title}"
     
 class Notification(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True) 
-    request = models.OneToOneField(Request, on_delete=models.CASCADE, null=True, blank=True, related_name='notification_request')
+    requete = models.OneToOneField(requete, on_delete=models.CASCADE, null=True, blank=True, related_name='notification_requete')
     status = models.BooleanField(default=False)
     date_creation = models.DateTimeField(auto_now_add=True) 
     def __str__(self):
