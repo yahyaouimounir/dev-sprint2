@@ -34,7 +34,12 @@ class requete(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True) 
     participant = models.ForeignKey(Member, on_delete=models.CASCADE, null=True, blank=True, related_name='requetes_made')
     event = models.ForeignKey(Event, on_delete=models.CASCADE, null=True, blank=True, related_name='event_requetes')
-    status = models.BooleanField(default=False) 
+    STATUS_CHOICES = (
+        ('accepted', 'accepted'),
+        ('refused', 'refused'),
+        ('pending', 'pending'),
+    )
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending') 
     notification = models.OneToOneField('Notification', on_delete=models.CASCADE, null=True, blank=True,related_name='requete_notification')
     def __str__(self):
         return f"requete from {self.participant.username} for {self.event.title}"

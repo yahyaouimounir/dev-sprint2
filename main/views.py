@@ -280,7 +280,7 @@ def accept_requete(request, id):
         return Response({'error': 'Admin privileges required'}, status=status.HTTP_403_FORBIDDEN)
     else:
         Requete = get_object_or_404(requete, id=id) 
-        Requete.status = True
+        Requete.status = "accepted"
         Requete.save()
         unique_id = str(Requete.id)+str(Requete.participant.id)
         sendMail(
@@ -305,6 +305,7 @@ def refuse_requete(request, id):
     else:
         Requete = get_object_or_404(requete, id=id) 
         unique_id = str(Requete.id)+str(Requete.participant.id)
+        Requete.status = "refused"
         sendRefuseMail(
             user=Requete.participant.user.username,
             event_name=Requete.event.title,
